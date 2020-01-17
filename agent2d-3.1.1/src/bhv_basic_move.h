@@ -37,6 +37,7 @@ public:
       { }
 
     bool execute( rcsc::PlayerAgent * agent );
+    bool block( rcsc::PlayerAgent * agent );
 
 private:
     double getDashPower( const rcsc::PlayerAgent * agent );
