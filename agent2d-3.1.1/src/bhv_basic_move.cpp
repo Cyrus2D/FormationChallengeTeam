@@ -49,6 +49,7 @@
 #include <vector>
 
 #include "neck_offensive_intercept_neck.h"
+#include <fstream>
 
 using namespace rcsc;
 
@@ -90,6 +91,8 @@ Bhv_BasicMove::execute( PlayerAgent * agent )
 
         return true;
     }
+    if (block(agent))
+        return true;
 
     const Vector2D target_point = Strategy::i().getPosition( wm.self().unum() );
     const double dash_power = Strategy::get_normal_dash_power( wm );
@@ -138,8 +141,9 @@ bool Bhv_BasicMove::block(PlayerAgent *agent)
     Vector2D ball_pos = wm.ball().inertiaPoint(opp_min);
     Vector2D dribble_vel = Vector2D::polar2vector(0.8, (Vector2D(-52.5, 0.0) - ball_pos).th());
 
-    double max_dist_to_block = 20;
-    int number_of_blocker = 2;
+    double max_dist_to_block = Features::i()->block_distance;
+    int number_of_blocker = Features::i()->block_number;
+    std::cout<<"bl num"<<number_of_blocker<<std::endl;
     std::vector<int> blocker_unum;
     std::vector<Vector2D> blocker_pos;
 
@@ -171,4 +175,28 @@ bool Bhv_BasicMove::block(PlayerAgent *agent)
         }
     }
     return false;
+}
+
+Features * Features::ins = nullptr;
+
+Features::Features(std::string formation_dir){
+    formation_dir += std::string("/");
+    std::ifstream infile(formation_dir + std::string("features.conf"));
+    int version = 0;
+    double a;
+    int counter = 0;
+    infile >> version;
+    while (infile >> a) {
+        if (version == 0){
+            switch (counter) {
+            case 0:
+                block_number = int(a);
+                break;
+            case 1:
+                block_distance = a;
+                break;
+            }
+        }
+        counter += 1;
+    }
 }

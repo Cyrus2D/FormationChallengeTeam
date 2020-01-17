@@ -29,7 +29,7 @@
 #endif
 
 #include "sample_player.h"
-
+#include "bhv_basic_move.h"
 #include "strategy.h"
 #include "field_analyzer.h"
 
@@ -211,6 +211,8 @@ SamplePlayer::initImpl( CmdLineParser & cmd_parser )
                   << config().configDir() << "/kick-table]"
                   << std::endl;
     }
+
+    Features::i(config().configDir());
 
     return true;
 }

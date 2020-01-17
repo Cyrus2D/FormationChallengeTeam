@@ -43,4 +43,19 @@ private:
     double getDashPower( const rcsc::PlayerAgent * agent );
 };
 
+class Features{
+public:
+    static Features * ins;
+    static Features * i(const std::string formation_dir = ""){
+        if (ins == nullptr){
+            ins = new Features(formation_dir);
+        }
+        return ins;
+    }
+    int block_number = 1;
+    double block_distance = 20;
+
+    Features(const std::string formation_dir);
+};
+
 #endif
