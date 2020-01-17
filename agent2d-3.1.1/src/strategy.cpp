@@ -73,20 +73,8 @@
 
 using namespace rcsc;
 
-const std::string Strategy::BEFORE_KICK_OFF_CONF = "before-kick-off.conf";
-const std::string Strategy::NORMAL_FORMATION_CONF = "normal-formation.conf";
 const std::string Strategy::DEFENSE_FORMATION_CONF = "defense-formation.conf";
 const std::string Strategy::OFFENSE_FORMATION_CONF = "offense-formation.conf";
-const std::string Strategy::GOAL_KICK_OPP_FORMATION_CONF = "goal-kick-opp.conf";
-const std::string Strategy::GOAL_KICK_OUR_FORMATION_CONF = "goal-kick-our.conf";
-const std::string Strategy::GOALIE_CATCH_OPP_FORMATION_CONF = "goalie-catch-opp.conf";
-const std::string Strategy::GOALIE_CATCH_OUR_FORMATION_CONF = "goalie-catch-our.conf";
-const std::string Strategy::KICKIN_OUR_FORMATION_CONF = "kickin-our-formation.conf";
-const std::string Strategy::SETPLAY_OPP_FORMATION_CONF = "setplay-opp-formation.conf";
-const std::string Strategy::SETPLAY_OUR_FORMATION_CONF = "setplay-our-formation.conf";
-const std::string Strategy::INDIRECT_FREEKICK_OPP_FORMATION_CONF = "indirect-freekick-opp-formation.conf";
-const std::string Strategy::INDIRECT_FREEKICK_OUR_FORMATION_CONF = "indirect-freekick-our-formation.conf";
-
 
 /*-------------------------------------------------------------------*/
 /*!
@@ -199,22 +187,6 @@ Strategy::read( const std::string & formation_dir )
         configpath += '/';
     }
 
-    // before kick off
-    M_before_kick_off_formation = readFormation( configpath + BEFORE_KICK_OFF_CONF );
-    if ( ! M_before_kick_off_formation )
-    {
-        std::cerr << "Failed to read before_kick_off formation" << std::endl;
-        return false;
-    }
-
-    ///////////////////////////////////////////////////////////
-    M_normal_formation = readFormation( configpath + NORMAL_FORMATION_CONF );
-    if ( ! M_normal_formation )
-    {
-        std::cerr << "Failed to read normal formation" << std::endl;
-        return false;
-    }
-
     M_defense_formation = readFormation( configpath + DEFENSE_FORMATION_CONF );
     if ( ! M_defense_formation )
     {
@@ -228,66 +200,6 @@ Strategy::read( const std::string & formation_dir )
         std::cerr << "Failed to read offense formation" << std::endl;
         return false;
     }
-
-    M_goal_kick_opp_formation = readFormation( configpath + GOAL_KICK_OPP_FORMATION_CONF );
-    if ( ! M_goal_kick_opp_formation )
-    {
-        return false;
-    }
-
-    M_goal_kick_our_formation = readFormation( configpath + GOAL_KICK_OUR_FORMATION_CONF );
-    if ( ! M_goal_kick_our_formation )
-    {
-        return false;
-    }
-
-    M_goalie_catch_opp_formation = readFormation( configpath + GOALIE_CATCH_OPP_FORMATION_CONF );
-    if ( ! M_goalie_catch_opp_formation )
-    {
-        return false;
-    }
-
-    M_goalie_catch_our_formation = readFormation( configpath + GOALIE_CATCH_OUR_FORMATION_CONF );
-    if ( ! M_goalie_catch_our_formation )
-    {
-        return false;
-    }
-
-    M_kickin_our_formation = readFormation( configpath + KICKIN_OUR_FORMATION_CONF );
-    if ( ! M_kickin_our_formation )
-    {
-        std::cerr << "Failed to read kickin our formation" << std::endl;
-        return false;
-    }
-
-    M_setplay_opp_formation = readFormation( configpath + SETPLAY_OPP_FORMATION_CONF );
-    if ( ! M_setplay_opp_formation )
-    {
-        std::cerr << "Failed to read setplay opp formation" << std::endl;
-        return false;
-    }
-
-    M_setplay_our_formation = readFormation( configpath + SETPLAY_OUR_FORMATION_CONF );
-    if ( ! M_setplay_our_formation )
-    {
-        std::cerr << "Failed to read setplay our formation" << std::endl;
-        return false;
-    }
-
-    M_indirect_freekick_opp_formation = readFormation( configpath + INDIRECT_FREEKICK_OPP_FORMATION_CONF );
-    if ( ! M_indirect_freekick_opp_formation )
-    {
-        std::cerr << "Failed to read indirect freekick opp formation" << std::endl;
-        return false;
-    }
-
-    M_indirect_freekick_our_formation = readFormation( configpath + INDIRECT_FREEKICK_OUR_FORMATION_CONF );
-    if ( ! M_indirect_freekick_our_formation )
-    {
-        std::cerr << "Failed to read indirect freekick our formation" << std::endl;
-        return false;
-    }
-
 
     s_initialized = true;
     return true;
@@ -801,7 +713,7 @@ Strategy::getFormation( const WorldModel & wm ) const
         default:
             break;
         }
-        return M_normal_formation;
+        return M_defense_formation;
     }
 
     //
@@ -813,11 +725,11 @@ Strategy::getFormation( const WorldModel & wm ) const
         if ( wm.ourSide() == wm.gameMode().side() )
         {
             // our kick-in or corner-kick
-            return M_kickin_our_formation;
+            return M_offense_formation;
         }
         else
         {
-            return M_setplay_opp_formation;
+            return M_defense_formation;
         }
     }
 
@@ -829,7 +741,7 @@ Strategy::getFormation( const WorldModel & wm ) const
          || ( wm.gameMode().type() == GameMode::IndFreeKick_
               && wm.gameMode().side() == wm.ourSide() ) )
     {
-        return M_indirect_freekick_our_formation;
+        return M_offense_formation;
     }
 
     //
@@ -840,7 +752,7 @@ Strategy::getFormation( const WorldModel & wm ) const
          || ( wm.gameMode().type() == GameMode::IndFreeKick_
               && wm.gameMode().side() == wm.theirSide() ) )
     {
-        return M_indirect_freekick_opp_formation;
+        return M_defense_formation;
     }
 
     //
@@ -857,11 +769,11 @@ Strategy::getFormation( const WorldModel & wm ) const
             if ( wm.ball().pos().x < ServerParam::i().ourPenaltyAreaLineX() + 1.0
                  && wm.ball().pos().absY() < ServerParam::i().penaltyAreaHalfWidth() + 1.0 )
             {
-                return M_indirect_freekick_opp_formation;
+                return M_defense_formation;
             }
             else
             {
-                return M_setplay_opp_formation;
+                return M_defense_formation;
             }
         }
         else
@@ -872,11 +784,11 @@ Strategy::getFormation( const WorldModel & wm ) const
             if ( wm.ball().pos().x > ServerParam::i().theirPenaltyAreaLineX()
                  && wm.ball().pos().absY() < ServerParam::i().penaltyAreaHalfWidth() )
             {
-                return M_indirect_freekick_our_formation;
+                return M_offense_formation;
             }
             else
             {
-                return M_setplay_our_formation;
+                return M_offense_formation;
             }
         }
     }
@@ -888,11 +800,11 @@ Strategy::getFormation( const WorldModel & wm ) const
     {
         if ( wm.gameMode().side() == wm.ourSide() )
         {
-            return M_goal_kick_our_formation;
+            return M_offense_formation;
         }
         else
         {
-            return M_goal_kick_opp_formation;
+            return M_defense_formation;
         }
     }
 
@@ -903,11 +815,11 @@ Strategy::getFormation( const WorldModel & wm ) const
     {
         if ( wm.gameMode().side() == wm.ourSide() )
         {
-            return M_goalie_catch_our_formation;
+            return M_offense_formation;
         }
         else
         {
-            return M_goalie_catch_opp_formation;
+            return M_defense_formation;
         }
     }
 
@@ -917,7 +829,7 @@ Strategy::getFormation( const WorldModel & wm ) const
     if ( wm.gameMode().type() == GameMode::BeforeKickOff
          || wm.gameMode().type() == GameMode::AfterGoal_ )
     {
-        return M_before_kick_off_formation;
+        return M_offense_formation;
     }
 
     //
@@ -925,12 +837,12 @@ Strategy::getFormation( const WorldModel & wm ) const
     //
     if ( wm.gameMode().isOurSetPlay( wm.ourSide() ) )
     {
-        return M_setplay_our_formation;
+        return M_offense_formation;
     }
 
     if ( wm.gameMode().type() != GameMode::PlayOn )
     {
-        return M_setplay_opp_formation;
+        return M_defense_formation;
     }
 
     //
@@ -945,7 +857,7 @@ Strategy::getFormation( const WorldModel & wm ) const
         break;
     }
 
-    return M_normal_formation;
+    return M_defense_formation;
 }
 
 /*-------------------------------------------------------------------*/

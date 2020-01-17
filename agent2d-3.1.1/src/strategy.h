@@ -67,19 +67,8 @@ enum SituationType {
 
 class Strategy {
 public:
-    static const std::string BEFORE_KICK_OFF_CONF;
-    static const std::string NORMAL_FORMATION_CONF;
     static const std::string DEFENSE_FORMATION_CONF;
     static const std::string OFFENSE_FORMATION_CONF;
-    static const std::string GOAL_KICK_OPP_FORMATION_CONF;
-    static const std::string GOAL_KICK_OUR_FORMATION_CONF;
-    static const std::string GOALIE_CATCH_OPP_FORMATION_CONF;
-    static const std::string GOALIE_CATCH_OUR_FORMATION_CONF;
-    static const std::string KICKIN_OUR_FORMATION_CONF;
-    static const std::string SETPLAY_OPP_FORMATION_CONF;
-    static const std::string SETPLAY_OUR_FORMATION_CONF;
-    static const std::string INDIRECT_FREEKICK_OPP_FORMATION_CONF;
-    static const std::string INDIRECT_FREEKICK_OUR_FORMATION_CONF;
 
     enum BallArea {
         BA_CrossBlock, BA_DribbleBlock, BA_DribbleAttack, BA_Cross,
@@ -106,22 +95,8 @@ private:
     // formations
     //
 
-    rcsc::Formation::Ptr M_before_kick_off_formation;
-
-    rcsc::Formation::Ptr M_normal_formation;
     rcsc::Formation::Ptr M_defense_formation;
     rcsc::Formation::Ptr M_offense_formation;
-
-    rcsc::Formation::Ptr M_goal_kick_opp_formation;
-    rcsc::Formation::Ptr M_goal_kick_our_formation;
-    rcsc::Formation::Ptr M_goalie_catch_opp_formation;
-    rcsc::Formation::Ptr M_goalie_catch_our_formation;
-    rcsc::Formation::Ptr M_kickin_our_formation;
-    rcsc::Formation::Ptr M_setplay_opp_formation;
-    rcsc::Formation::Ptr M_setplay_our_formation;
-    rcsc::Formation::Ptr M_indirect_freekick_opp_formation;
-    rcsc::Formation::Ptr M_indirect_freekick_our_formation;
-
 
     int M_goalie_unum;
 
