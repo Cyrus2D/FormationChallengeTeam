@@ -37,7 +37,7 @@
 
 #include "dribble.h"
 #include "field_analyzer.h"
-
+#include "../bhv_basic_move.h"
 #include <rcsc/player/world_model.h>
 #include <rcsc/player/intercept_table.h>
 #include <rcsc/common/server_param.h>
@@ -791,7 +791,8 @@ ShortDribbleGenerator::checkOpponent( const WorldModel & wm,
         int n_step = ( n_turn == 0
                        ? n_turn + n_dash
                        : n_turn + n_dash + 1 );
-
+        int acc = static_cast<int>((Features::i()->dribble_acc - 50.0) / 10.0);
+        n_step -= acc;
         int bonus_step = 0;
 
         if ( ball_trap_pos.x < 30.0 )

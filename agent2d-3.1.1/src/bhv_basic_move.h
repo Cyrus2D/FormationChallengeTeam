@@ -54,6 +54,12 @@ public:
     }
     int block_number = 1;
     double block_distance = 20;
+    double pass_acc = 50;
+    double dribble_acc = 50;
+    double shoot_acc = 50;
+    double pass_eval = 1;
+    double dribble_eval = 1;
+    double hold_eval = 1;
 
     Features(const std::string formation_dir);
 };

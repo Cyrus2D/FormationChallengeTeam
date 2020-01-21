@@ -34,7 +34,7 @@
 #endif
 
 #include "shoot_generator.h"
-
+#include "../bhv_basic_move.h"
 #include "field_analyzer.h"
 
 #include <rcsc/action/kick_table.h>
@@ -552,6 +552,8 @@ ShootGenerator::maybeGoalieCatch( const PlayerObject * goalie,
                        ? n_turn + n_dash
                        : n_turn + n_dash + 1 );
 
+        int acc = static_cast<int>((Features::i()->shoot_acc - 50.0) / 10.0);
+        n_step -= acc;
         int bonus_step = ( in_penalty_area
                            ? bound( 0, goalie->posCount(), 5 )
                            : bound( 0, goalie->posCount() - 1, 1 ) );
@@ -687,7 +689,8 @@ ShootGenerator::opponentCanReach( const PlayerObject * opponent,
         int n_step = ( n_turn == 0
                        ? n_turn + n_dash
                        : n_turn + n_dash + 1 );
-
+        int acc = static_cast<int>((Features::i()->shoot_acc - 50.0) / 10.0);
+        n_step -= acc;
         //int bonus_step = bound( 0, opponent->posCount() - 1, 1 );
         int bonus_step = bound( 0, opponent->posCount(), 1 );
         int penalty_step = -1; //-3;

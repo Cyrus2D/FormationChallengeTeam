@@ -34,7 +34,7 @@
 #endif
 
 #include "self_pass_generator.h"
-
+#include "../bhv_basic_move.h"
 #include "dribble.h"
 #include "field_analyzer.h"
 
@@ -683,6 +683,8 @@ SelfPassGenerator::checkOpponent( const WorldModel & wm,
         int opp_n_step = ( opp_n_turn == 0
                            ? opp_n_turn + opp_n_dash
                            : opp_n_turn + opp_n_dash + 1 );
+        int acc = static_cast<int>((Features::i()->dribble_acc - 50.0) / 10.0);
+        opp_n_step -= acc;
         int bonus_step = 0;
 
         if ( receive_pos.x < 27.0 )

@@ -34,7 +34,7 @@
 #include <rcsc/common/server_param.h>
 #include <rcsc/common/logger.h>
 #include <rcsc/time/timer.h>
-
+#include "../bhv_basic_move.h"
 #include <string>
 #include <sstream>
 #include <queue>
@@ -418,7 +418,8 @@ ActionChainGraph::calculateResultBestFirstSearch( const WorldModel & wm,
     //
     const PredictState current_state( wm );
     const std::vector< ActionStatePair > empty_path;
-    const double current_evaluation = (*M_evaluator)( current_state, empty_path );
+    double current_evaluation = (*M_evaluator)( current_state, empty_path );
+    current_evaluation *= Features::i()->hold_eval;
     ++M_chain_count;
     ++(*n_evaluated);
 #ifdef ACTION_CHAIN_DEBUG
@@ -497,6 +498,11 @@ ActionChainGraph::calculateResultBestFirstSearch( const WorldModel & wm,
             candidate_series.push_back( *it );
 
             double ev = (*M_evaluator)( (*it).state(), candidate_series );
+            if( (*it).action().category() == CooperativeAction::Pass )
+                ev *= Features::i()->pass_eval;
+            else if((*it).action().category() == CooperativeAction::Dribble )
+                ev *= Features::i()->dribble_eval;
+
             ++(*n_evaluated);
 #ifdef ACTION_CHAIN_DEBUG
             write_chain_log( wm, M_chain_count, candidate_series, ev );

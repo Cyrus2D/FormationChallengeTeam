@@ -34,7 +34,7 @@
 #endif
 
 #include "cross_generator.h"
-
+#include "../bhv_basic_move.h"
 #include "field_analyzer.h"
 
 #include <rcsc/player/world_model.h>
@@ -706,6 +706,8 @@ CrossGenerator::checkOpponent( const Vector2D & first_ball_pos,
                                                                        true ) );
 
             int n_step = n_turn + n_dash + 1; // 1 step penalty for observation delay
+            int acc = static_cast<int>((Features::i()->pass_acc - 50.0) / 10.0);
+            n_step -= acc;
             if ( (*o)->isTackling() )
             {
                 n_step += 5; // Magic Number

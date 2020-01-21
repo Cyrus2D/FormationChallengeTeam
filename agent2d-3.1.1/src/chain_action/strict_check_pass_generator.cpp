@@ -37,7 +37,7 @@
 
 #include "pass.h"
 #include "field_analyzer.h"
-
+#include "../bhv_basic_move.h"
 #include <rcsc/player/world_model.h>
 #include <rcsc/player/intercept_table.h>
 #include <rcsc/common/audio_memory.h>
@@ -1769,6 +1769,8 @@ StrictCheckPassGenerator::predictOpponentReachStep( const WorldModel & wm,
                        ? n_turn + n_dash
                        : n_turn + n_dash + 1 ); // 1 step penalty for observation delay
 
+        int acc = static_cast<int>((Features::i()->pass_acc - 50.0) / 10.0);
+        n_step -= acc;
         int bonus_step = 0;
         if ( opponent.player_->isTackling() )
         {

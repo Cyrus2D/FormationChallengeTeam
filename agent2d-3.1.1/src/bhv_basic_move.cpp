@@ -195,6 +195,24 @@ Features::Features(std::string formation_dir){
             case 1:
                 block_distance = a;
                 break;
+            case 2:
+                pass_acc = a;
+                break;
+            case 3:
+                dribble_acc = a;
+                break;
+            case 4:
+                shoot_acc = a;
+                break;
+            case 5:
+                pass_eval = a;
+                break;
+            case 6:
+                dribble_eval = a;
+                break;
+            case 7:
+                hold_eval = a;
+                break;
             }
         }
         counter += 1;
