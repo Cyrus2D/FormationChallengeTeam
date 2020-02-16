@@ -143,7 +143,6 @@ bool Bhv_BasicMove::block(PlayerAgent *agent)
 
     double max_dist_to_block = Features::i()->block_distance;
     int number_of_blocker = Features::i()->block_number;
-    std::cout<<"bl num"<<number_of_blocker<<std::endl;
     std::vector<int> blocker_unum;
     std::vector<Vector2D> blocker_pos;
 
